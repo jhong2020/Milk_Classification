@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>우유 팩 분류 시스템</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.min.js"></script> <!-- Socket.IO 라이브러리 -->
+</head>
+<body>
+    <div class="main-container">
+        <h1>우유 팩 분류 시스템</h1>
+
+        <div class="content-container">
+            <!-- 카메라 피드 이미지 -->
+            <img src="{{ url_for('video_feed') }}" class="camera-feed" width="640" height="480" />
+            
+            <!-- 콘솔 창 -->
+            <div class="console-container">
+                <h2>콘솔</h2>
+                <div class="console-output" id="consoleOutput">
+                    <!-- 콘솔 메시지들이 여기에 추가됨 -->
+                </div>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <!-- START 버튼 -->
+            <label class="switch-container">
+                <input type="checkbox" id="startButton" onclick="toggleSignal(true)">
+                <div class="circle start-circle">
+                    <div class="led"></div>
+                    <span class="start-text">START</span>
+                </div>
+            </label>
+        
+            <!-- STOP 버튼 -->
+            <label class="switch-container">
+                <input type="checkbox" id="stopButton" onclick="toggleSignal(false)">
+                <div class="circle stop-circle">
+                    <div class="led"></div>
+                    <span class="stop-text">STOP</span>
+                </div>
+            </label>
+
+            <div class="signal-lights">
+                <div class="signal red-signal"></div>
+                <div class="signal green-signal"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const socket = io({ path: '/socket.io' });  // Socket.IO 객체 생성 및 연결
+
+        // 서버에서 수신한 메시지를 콘솔 창에 추가하는 함수
+        socket.on('console_log', (data) => {
+            addConsoleMessage(data.message);
+        });
+
+        // 콘솔 창에 메시지를 추가하는 함수
+        function addConsoleMessage(message) {
+            const consoleOutput = document.getElementById('consoleOutput');
+            const messageElement = document.createElement('p');
+            messageElement.textContent = message;
+            consoleOutput.appendChild(messageElement);
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;  // 자동 스크롤
+        }
+
+        // 신호등 상태를 조작하는 함수
+        function toggleSignal(isStart) {
+            const redSignal = document.querySelector('.red-signal');
+            const greenSignal = document.querySelector('.green-signal');
+            const startButton = document.getElementById('startButton');
+            const stopButton = document.getElementById('stopButton');
+
+            if (isStart && !startButton.disabled) {
+                redSignal.style.opacity = '0.3';  // 빨간불 끄기
+                greenSignal.style.opacity = '1';   // 초록불 켜기
+                stopButton.checked = false;
+                startButton.disabled = true;
+                stopButton.disabled = false;
+                addConsoleMessage("시스템 시작");
+
+                fetch('/start', { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => addConsoleMessage(data.status === "started" ? "컨베이어 시작" : "오류 발생"));
+            } else if (!isStart && !stopButton.disabled) {
+                redSignal.style.opacity = '1';
+                greenSignal.style.opacity = '0.3';
+                startButton.checked = false;
+                stopButton.disabled = true;
+                startButton.disabled = false;
+                addConsoleMessage("시스템 정지");
+
+                fetch('/stop', { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => addConsoleMessage(data.status === "stopped" ? "컨베이어 정지" : "오류 발생"));
+            }
+        }
+    </script>
+</body>
+</html>

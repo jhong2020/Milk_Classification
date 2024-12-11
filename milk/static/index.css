@@ -1,0 +1,163 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f4f6f8;
+}
+
+.main-container {
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    width: 1000px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.button-container {
+    display: flex;
+    gap: 10px; 
+}
+
+.switch-container {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    font-size: 20px;
+    user-select: none;
+    margin-top: 20px;
+}
+
+.switch-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.circle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 6em;
+    height: 6em;
+    border-radius: 50%;
+    border: 6px solid #838996;
+    background-color: #282828;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+}
+
+.circle span {
+    color: #e5e4e2;
+    font-size: small;
+}
+
+.circle .led {
+    width: 1em;
+    height: 0.2em;
+    background-color: #BBBBBB;
+    border-radius: 5px;
+    transition: 0.4s;
+}
+
+.start-text, .stop-text {
+    font-weight: 600;
+}
+
+.switch-container input:checked ~ .circle {
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
+     rgba(14, 30, 37, 0.32) 0px 2px 16px 0px,
+     inset 3px 3px 8px 1px #485871,
+     inset -3px -3px 8px 1px #485871;
+}
+
+.start-circle .led {
+    background-color: #BBBBBB;
+    box-shadow: none;
+}
+
+.stop-circle .led {
+    background-color: #BBBBBB;
+    box-shadow: none;
+}
+/* 콘텐트 컨테이너 - 카메라 피드와 콘솔 창 나란히 배치 */
+.content-container {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+/* 콘솔 창 스타일 */
+.console-container {
+    width: 300px;
+    height: 480px;  /* 카메라 피드 높이와 동일하게 설정 */
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.console-container h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* 콘솔 출력 텍스트 스타일 */
+.console-output {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    color: #444;
+}
+
+.console-output p {
+    margin: 5px 0;
+    padding: 5px;
+    background: #eef;
+    border-radius: 4px;
+}
+/* 신호등 스타일 */
+.signal-lights {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 20px;
+}
+
+.signal {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    opacity: 0.3; /* 기본적으로 꺼진 상태 */
+    transition: opacity 0.3s ease;
+}
+
+.red-signal {
+    background-color: #FF4C4C; /* 빨간불 */
+    opacity: 1; /* 기본적으로 빨간불 켜짐 */
+}
+
+.green-signal {
+    background-color: #4CAF50; /* 초록불 */
+}
